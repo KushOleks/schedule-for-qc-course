@@ -17,47 +17,99 @@ const items = [
     },
 ];
 
-const term = 'аудиторія';
-const deepTerm = 'Лекційна';
-const grouped = 'групова';
-const arr = ['name', 'type.description', grouped];
-const excludeTerm = 'exclude9012';
+const arr = ['name', 'type.description', 'групова'];
 
 describe('behavior of search function', () => {
-    test('shows all items if search term length === 0', () => {
+    test('shows all items if search term is empty', () => {
         expect(search(items, '', arr).length).toBe(items.length);
     });
 
+    test('shows all items if search term contains only spaces', () => {
+        expect(search(items, '   ', arr).length).toBe(items.length);
+    });
+
     test('shows items which include search term', () => {
-        expect(search(items, term, arr)).toEqual(
+        expect(search(items, 'аудиторія', arr)).toEqual(
             expect.arrayContaining([
-                expect.objectContaining({ name: expect.stringContaining(term) }),
+                expect.objectContaining({name: expect.stringContaining('аудиторія')}),
             ]),
         );
     });
 
-    test('shows items which include search term equal "групова"', () => {
-        expect(search(items, grouped, arr)).toEqual(
-            expect.arrayContaining([expect.objectContaining({ grouped: true })]),
-        );
-    });
-
-    test('it shows items which include search term in deep object', () => {
-        expect(search(items, deepTerm, arr)).toEqual(
+    test('shows items which include search term in deep object', () => {
+        expect(search(items, 'Лекційна', arr)).toEqual(
             expect.arrayContaining([
                 expect.objectContaining({
                     type: expect.objectContaining({
-                        description: expect.stringContaining(deepTerm),
+                        description: expect.stringContaining('Лекційна'),
                     }),
                 }),
             ]),
         );
     });
 
-    test('it does not show items which exclude search term', () => {
-        expect(search(items, excludeTerm, arr)).toEqual(
-            expect.not.arrayContaining([
-                expect.objectContaining({ name: expect.stringContaining(excludeTerm) }),
+    test('shows grouped item when search term equals grouped keyword', () => {
+        expect(search(items, 'групова', arr)).toEqual(
+            expect.arrayContaining([expect.objectContaining({grouped: true})]),
+        );
+    });
+
+    test('shows grouped item when search term equals grouped keyword in upper case', () => {
+        expect(search(items, 'ГРУПОВА', arr)).toEqual(
+            expect.arrayContaining([expect.objectContaining({grouped: true})]),
+        );
+    });
+
+    test('finds values case-insensitively', () => {
+        expect(search(items, 'лекційна', arr)).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    type: expect.objectContaining({
+                        description: 'Лекційна',
+                    }),
+                }),
+            ]),
+        );
+    });
+
+    test('finds values when search term has extra spaces around it', () => {
+        expect(search(items, '  Лекційна  ', arr)).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    type: expect.objectContaining({
+                        description: 'Лекційна',
+                    }),
+                }),
+            ]),
+        );
+    });
+
+    test('returns empty array when term is not found', () => {
+        expect(search(items, 'exclude9012', arr)).toEqual([]);
+    });
+
+    test('does not fail when deep object property does not exist', () => {
+        const customItems = [
+            {
+                name: 'test item',
+                grouped: false,
+            },
+        ];
+
+        expect(search(customItems, 'Практична', ['name', 'type.description'])).toEqual([]);
+    });
+
+    test('finds match in simple property when deep property is missing', () => {
+        const customItems = [
+            {
+                name: 'special room',
+                grouped: false,
+            },
+        ];
+
+        expect(search(customItems, 'special', ['name', 'type.description'])).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({name: 'special room'}),
             ]),
         );
     });

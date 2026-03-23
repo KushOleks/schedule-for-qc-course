@@ -1,23 +1,28 @@
 /** @type {import('@stryker-mutator/api/core').PartialStrykerOptions} */
 const config = {
-    testRunner: "jest",
+    testRunner: 'jest',
     jest: {
-        configFile: "jest.config.js",
+        configFile: 'jest.config.js',
         config: {
-            testMatch: ["**/src/helper/**/*.test.js"],
-            testPathIgnorePatterns: ["setLink"],
-            coverageThreshold: undefined
-        }
+            testMatch: ['**/src/helper/**/*.test.js'],
+            testPathIgnorePatterns: ['setLink'],
+            coverageThreshold: undefined,
+        },
     },
     mutator: {
         plugins: [],
-        excludedMutations: []
+        excludedMutations: [],
     },
-    mutate: ["src/helper/*.js", "!src/helper/*.test.js", "!src/helper/setLInk.js"],
-    reporters: ["html", "clear-text", "progress"],
+    mutate: [
+        'src/helper/*.js',
+        '!src/helper/*.test.js',
+        '!src/helper/setLink.js',
+    ],
+    reporters: ['html', 'clear-text', 'progress'],
     htmlReporter: {
-        fileName: "reports/mutation/mutation.html"
+        fileName: 'reports/mutation/mutation.html',
     },
-    coverageAnalysis: "perTest"
+    coverageAnalysis: 'perTest',
 };
+
 export default config;
