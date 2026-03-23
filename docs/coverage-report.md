@@ -49,6 +49,7 @@ Mutation testing показав, що значна частина мутанті
 ## Скріни
 <img width="772" height="304" alt="image" src="https://github.com/user-attachments/assets/c29cedf2-46cd-4cc6-9c50-09d9e52c70f2" />
 <img width="880" height="848" alt="image" src="https://github.com/user-attachments/assets/57a892ed-5173-4883-a1b5-4fec23d96165" />
+<img width="2048" height="1279" alt="image" src="https://github.com/user-attachments/assets/3d0bb74a-15b4-4e40-b042-6f3920d82fc1" />
 <img width="880" height="639" alt="image" src="https://github.com/user-attachments/assets/efb375f6-8e5d-4c47-82c7-be214ad965c2" />
 
 
