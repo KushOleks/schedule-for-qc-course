@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   app:
     build: .
@@ -9,22 +7,31 @@ services:
       DB_URL: ${DB_URL:-jdbc:postgresql://postgres:5432/appdb}
       DB_USER: ${DB_USER:-postgres}
       DB_PASSWORD: ${DB_PASSWORD:-postgres}
-      JWT_SECRET: ${JWT_SECRET}
+
+      # ✅ щоб не було WARN і щоб JWT працював локально
+      JWT_SECRET: ${JWT_SECRET:-dev-secret}
       JWT_EXPIRED: ${JWT_EXPIRED:-24h}
+
       LIQUIBASE_ENABLED: ${LIQUIBASE_ENABLED:-true}
       REDIS_URL: redis://redis:6379
       BACKEND_URL: ${BACKEND_URL:-http://localhost:8080}
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
       PORT: 8080
-      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
-      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+
+      # ✅ ГОЛОВНЕ ВИПРАВЛЕННЯ: заглушки для Google OAuth, щоб Spring Boot не падав
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-dummy}
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-dummy}
+
+      # (якщо Facebook не використовується — хай буде як є)
       FACEBOOK_CLIENT_ID: ${FACEBOOK_CLIENT_ID:-}
       FACEBOOK_CLIENT_SECRET: ${FACEBOOK_CLIENT_SECRET:-}
+
       MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
       MAIL_PORT: ${MAIL_PORT:-587}
       MAIL_USERNAME: ${MAIL_USERNAME:-}
       MAIL_PASSWORD: ${MAIL_PASSWORD:-}
       HIBERNATE_SHOW_SQL: ${HIBERNATE_SHOW_SQL:-false}
+
     depends_on:
       postgres:
         condition: service_healthy
@@ -38,7 +45,7 @@ services:
       POSTGRES_USER: ${DB_USER:-postgres}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
     ports:
-      - "5432:5432"
+     - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
