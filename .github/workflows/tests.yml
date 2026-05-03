@@ -65,7 +65,7 @@ jobs:
         with:
           name: playwright-report
           path: playwright-report/
-          
+
   api-tests:
     name: API Tests (Newman)
     runs-on: ubuntu-latest
@@ -98,3 +98,22 @@ jobs:
         with:
           name: newman-report
           path: newman-report.html
+
+      
+
+
+
+
+      - name: Show E2E files
+        run: |
+          echo "Current folder:"
+          pwd
+          echo "All files in tests/e2e:"
+          find tests/e2e -type f
+          echo "Playwright config:"
+          cat playwright.config.js
+
+      - name: Run E2E tests
+        env:
+          BASE_URL: ${{ env.BASE_URL }}
+        run: npx playwright test --list
