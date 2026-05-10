@@ -106,7 +106,7 @@ describe('Schedule API', () => {
       };
 
       await expect(api.post('/schedules', payload)).rejects.toMatchObject({
-        response: { status: 404 },
+        response: { status: 400 },
       });
     });
   });
