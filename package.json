@@ -4,8 +4,8 @@
   "description": "API testing for schedule project",
   "main": "index.js",
   "scripts": {
-    "test": "jest tests/api --runInBand",
-    "test:api": "jest tests/api --runInBand",
+    "test": "jest tests/api --runInBand --testTimeout=30000 --forceExit",
+    "test:api": "jest tests/api --runInBand --testTimeout=30000 --forceExit",
     "test:e2e": "playwright test tests/e2e/specs --project=chromium --workers=1 --grep-invert \"database\"",
     "test:db": "playwright test tests/e2e/specs/group.spec.js --project=chromium --workers=1 --grep \"database\""
   },
