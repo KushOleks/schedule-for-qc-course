@@ -35,6 +35,7 @@ test.describe('Group UI', () => {
   test('create group', async ({ page, browserName }) => {
     const loginPage = new LoginPage(page);
     const groupPage = new GroupPage(page);
+
     const browserCode = getBrowserCode(browserName);
     const groupName = `${browserCode}${Date.now().toString().slice(-3)}`;
 
@@ -48,6 +49,7 @@ test.describe('Group UI', () => {
   test('edit first group name', async ({ page, browserName }) => {
     const loginPage = new LoginPage(page);
     const groupPage = new GroupPage(page);
+
     const browserCode = getBrowserCode(browserName);
     const newGroupName = `${browserCode}${Date.now().toString().slice(-3)}`;
 
@@ -62,6 +64,7 @@ test.describe('Group UI', () => {
   test('add student to first group', async ({ page, browserName }) => {
     const loginPage = new LoginPage(page);
     const groupPage = new GroupPage(page);
+    
     const browserCode = getBrowserCode(browserName);
     const unique = `${browserCode}${Date.now()}`;
 

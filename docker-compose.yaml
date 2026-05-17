@@ -8,7 +8,6 @@ services:
       DB_USER: ${DB_USER:-postgres}
       DB_PASSWORD: ${DB_PASSWORD:-postgres}
 
-      # ✅ щоб не було WARN і щоб JWT працював локально
       JWT_SECRET: ${JWT_SECRET:-dev-secret}
       JWT_EXPIRED: ${JWT_EXPIRED:-24h}
 
@@ -18,11 +17,9 @@ services:
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
       PORT: 8080
 
-      # ✅ ГОЛОВНЕ ВИПРАВЛЕННЯ: заглушки для Google OAuth, щоб Spring Boot не падав
       SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-dummy}
       SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-dummy}
 
-      # (якщо Facebook не використовується — хай буде як є)
       FACEBOOK_CLIENT_ID: ${FACEBOOK_CLIENT_ID:-}
       FACEBOOK_CLIENT_SECRET: ${FACEBOOK_CLIENT_SECRET:-}
 

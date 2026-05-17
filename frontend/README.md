@@ -1,5 +1,9 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+# Schedule Testing
+
+![Tests](https://github.com/KushOleks/schedule-for-qc-course/actions/workflows/tests.yml/badge.svg)
+
 ## Available Scripts
 
 In the project directory, you can run:

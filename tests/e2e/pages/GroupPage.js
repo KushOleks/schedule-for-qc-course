@@ -1,3 +1,5 @@
+import { expect } from '@playwright/test';
+
 export class GroupPage {
   constructor(page) {
     this.page = page;
@@ -8,6 +10,11 @@ export class GroupPage {
     this.groupsOption = page.getByRole('option', { name: 'Groups' });
 
     this.groupNameInput = page.getByRole('textbox', { name: 'Group:' });
+
+    this.groupSaveButton = page.locator(
+      'xpath=//*[@id="root"]/div/div[2]/div[1]/aside/div[2]/form/div[3]/button[1]'
+    );
+
     this.saveButton = page.getByRole('button', { name: 'Save' });
 
     this.addStudentLink = page.getByRole('link', { name: 'Add student' }).first();
@@ -28,8 +35,13 @@ export class GroupPage {
 
   async createGroup(name) {
     await this.groupNameInput.click();
-    await this.groupNameInput.fill(name);
-    await this.saveButton.click();
+
+    await this.groupNameInput.pressSequentially(name, {
+      delay: 100,
+    });
+
+    await expect(this.groupSaveButton).toBeEnabled();
+    await this.groupSaveButton.click();
   }
 
   async openFirstGroupForEdit() {
