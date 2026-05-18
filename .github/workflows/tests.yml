@@ -28,12 +28,15 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
+          cache-dependency-path: frontend/package-lock.json
 
-      - name: Install dependencies
+      - name: Install frontend dependencies
+        working-directory: frontend
         run: npm ci
 
-      - name: Unit placeholder
-        run: echo "No separate unit tests configured."
+      - name: Run frontend unit tests
+        working-directory: frontend
+        run: npm test -- --watchAll=false src/helper
 
   api-tests:
     name: API Tests Jest
