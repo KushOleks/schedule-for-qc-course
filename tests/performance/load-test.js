@@ -3,39 +3,49 @@ import { check, sleep } from 'k6';
 
 export const options = {
   stages: [
-    { duration: '10s', target: 5 },
-    { duration: '30s', target: 10 },
-    { duration: '10s', target: 0 },
+    { duration: '20s', target: 100 },
+    { duration: '1m', target: 100 },
+    { duration: '20s', target: 0 },
   ],
+
   thresholds: {
-    http_req_duration: ['p(95)<1000'],
-    http_req_failed: ['rate<0.05'],
+    http_req_duration: ['p(99)<5000'],
+    http_req_failed: ['rate<0.10'],
   },
 };
 
-const BASE_URL = 'https://test.k6.io';
+const BASE_URL =
+  'https://schedule-latest-pz3d.onrender.com';
 
 export default function () {
 
-  const main = http.get(`${BASE_URL}`);
+  const commonSchedule = http.get(
+    `${BASE_URL}/schedule?semester=1`
+  );
 
-  check(main, {
-    'main page status 200': (r) => r.status === 200,
-    'main page response < 1000ms': (r) => r.timings.duration < 1000,
+  check(commonSchedule, {
+    'common schedule status 200': (r) => r.status === 200,
+
+    'common schedule < 3s': (r) =>
+      r.timings.duration < 3000,
+
+    'common schedule has html': (r) =>
+      r.body.includes('<html'),
   });
 
-  const contacts = http.get(`${BASE_URL}/contacts.php`);
+  const groupSchedule = http.get(
+    `${BASE_URL}/schedule?semester=1&group=1`
+  );
 
-  check(contacts, {
-    'contacts status 200': (r) => r.status === 200,
+  check(groupSchedule, {
+    'group schedule status 200': (r) => r.status === 200,
+
+    'group schedule < 3s': (r) =>
+      r.timings.duration < 3000,
+
+    'group schedule has html': (r) =>
+      r.body.includes('<html'),
   });
 
-  const news = http.get(`${BASE_URL}/news.php`);
-
-  check(news, {
-    'news status 200': (r) => r.status === 200,
-    'news response < 1000ms': (r) => r.timings.duration < 1000,
-  });
-
-  sleep(1);
+  sleep(2);
 }

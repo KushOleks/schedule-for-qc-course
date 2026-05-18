@@ -1,97 +1,74 @@
-# Security Testing Report
+# Security Report
 
-## Tool Used
-- OWASP ZAP Baseline Scan
-- Docker image: ghcr.io/zaproxy/zaproxy:stable
+## Цільовий додаток
 
-## Target
-https://demo.owasp-juice.shop
+- Назва: Schedule Management System
+- URL: https://schedule-latest-pz3d.onrender.com
+- Метод: OWASP ZAP Baseline Scan
+- Інструмент: OWASP ZAP
 
-## Scan Summary
+## Знайдені проблеми
 
-| Risk Level | Count |
-|---|---|
-| High | 0 |
-| Medium | 2 |
-| Low | 7 |
-| Informational | 4 |
-
-## Medium Risk Issues
-
-### 1. Content Security Policy (CSP) Header Not Set
-Risk: Medium
-
-Description:
-The application does not define a Content-Security-Policy header.
-This may increase the risk of Cross-Site Scripting (XSS) attacks and malicious content injection.
-
-Recommendation:
-Configure the web server to send a proper CSP header that restricts allowed sources for scripts, styles, and other resources.
+| # | Рівень | Опис | Де знайдено |
+|---|--------|------|-------------|
+| 1 | Medium | Vulnerable JS Library | /static/js/main.b7dfd247.js |
+| 2 | Medium | Content Security Policy Header Not Set | Головна сторінка |
+| 3 | Low | Non-Storable Content | favicon, manifest.json, robots.txt |
+| 4 | Low | Permissions Policy Header Not Set | Головна сторінка |
+| 5 | Low | Timestamp Disclosure - Unix | JS bundle |
+| 6 | Info | Modern Web Application | Головна сторінка |
+| 7 | Low | Cross-Origin-Embedder-Policy Header Missing | Всі основні сторінки |
 
 ---
 
-### 2. Cross-Domain Misconfiguration
-Risk: Medium
+## Деталі
 
-Description:
-The server allows overly permissive Cross-Origin Resource Sharing (CORS) settings using:
+### Проблема 1: Vulnerable JS Library
 
-Access-Control-Allow-Origin: *
+- **Що знайдено:** ZAP виявив потенційно застарілу або вразливу JavaScript-бібліотеку.
+- **Де:**  
+  `/static/js/main.b7dfd247.js`
+- **Ризик:** Medium — можливі client-side вразливості або використання застарілих залежностей.
+- **Рекомендація:** оновити npm-залежності та перевірити проєкт через:
+  
+### Проблема 2: Content Security Policy (CSP) Header Not Set
 
-This may allow unauthorized cross-origin access to resources.
+- **Що знайдено:** відсутній HTTP-заголовок `Content-Security-Policy`.
+- **Де:** головна сторінка додатку.
+- **Ризик:** Medium — збільшується ризик XSS-атак та виконання небезпечного JavaScript-коду.
+- **Рекомендація:** додати CSP header у конфігурацію backend або web server.
 
-Recommendation:
-Restrict allowed origins to trusted domains only and avoid using wildcard (*) policies.
+### Проблема 3: Non-Storable Content
 
----
+- **Що знайдено:** деякі ресурси не містять cache-control політик для правильного керування кешуванням.
+- **Де:** `favicon.png`, `manifest.json`, `robots.txt`
+- **Ризик:** Low — можливе некоректне кешування контенту браузером.
+- **Рекомендація:** налаштувати HTTP cache headers для статичних ресурсів.
 
-## Low Risk Issues
+### Проблема 4: Permissions Policy Header Not Set
 
-### Cross-Origin-Embedder-Policy Header Missing
-The application does not define Cross-Origin-Embedder-Policy headers.
+- **Що знайдено:** відсутній HTTP-заголовок `Permissions-Policy`.
+- **Де:** головна сторінка додатку.
+- **Ризик:** Low — браузерні API можуть бути доступними без додаткових обмежень.
+- **Рекомендація:** додати Permissions-Policy header у конфігурацію сервера.
 
-### Cross-Origin-Opener-Policy Header Missing
-The application does not define Cross-Origin-Opener-Policy headers.
+### Проблема 5: Timestamp Disclosure - Unix
 
-### Dangerous JS Functions
-Potentially unsafe JavaScript function detected:
-bypassSecurityTrustHtml()
+- **Що знайдено:** у JavaScript bundle виявлено Unix timestamp.
+- **Де:** `/static/js/main.b7dfd247.js`
+- **Ризик:** Low — можливе часткове розкриття технічної інформації про build або deployment.
+- **Рекомендація:** мінімізувати leakage технічної інформації у production build.
 
-### Deprecated Feature Policy Header
-The deprecated Feature-Policy header is used instead of Permissions-Policy.
+### Проблема 6: Modern Web Application
 
-### Server Version Disclosure
-The server exposes version information:
-Apache/2.4.67 (Unix)
+- **Що знайдено:** ZAP визначив додаток як сучасний SPA/web application.
+- **Де:** головна сторінка.
+- **Ризик:** Info — інформаційне повідомлення, не є реальною вразливістю.
+- **Рекомендація:** виправлення не потребується.
 
-### Strict-Transport-Security Header Not Set
-HSTS header is missing.
+### Проблема 7: Cross-Origin-Embedder-Policy Header Missing or Invalid
 
-### Timestamp Disclosure
-Unix timestamps are exposed in HTTP responses.
-
----
-
-## Informational Findings
-
-- Modern Web Application detected
-- Cache-control headers should be reviewed
-- Some responses are cacheable
-- Some content may be stored by browsers/proxies
-
----
-
-## Conclusion
-
-The scan did not identify any high-risk vulnerabilities.
-
-However, several medium- and low-risk security issues were detected, mainly related to missing security headers and permissive CORS configuration.
-
-The application should improve HTTP security headers, restrict CORS policies, and review JavaScript security practices to strengthen overall security posture.
-
----
-
-## Report File
-
-Generated HTML report:
-reports/zap-report.html
+- **Що знайдено:** відсутній або некоректний заголовок `Cross-Origin-Embedder-Policy`.
+- **Де:** основні сторінки додатку.
+- **Ризик:** Low — можуть виникати проблеми із захистом cross-origin ресурсів.
+- **Рекомендація:** додати відповідний security header у конфігурацію сервера.

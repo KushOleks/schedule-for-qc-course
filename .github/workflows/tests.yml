@@ -7,7 +7,8 @@ on:
     branches: [main]
 
 env:
-  BASE_URL: https://schedule-latest-pz3d.onrender.com
+  BASE_URL: http://localhost:8080
+  DATABASE_URL: postgresql://postgres:postgres@localhost:5433/appdb
 
 jobs:
   unit-tests:
@@ -52,10 +53,36 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Start application
+        run: docker compose up -d --build
+
+      - name: Wait for application
+        run: |
+          for i in {1..60}; do
+            if curl -fsS http://localhost:8080/schedule?semester=1 > /dev/null; then
+              echo "Application is ready"
+              exit 0
+            fi
+            echo "Waiting for application..."
+            sleep 5
+          done
+          echo "Application did not start in time"
+          docker compose logs
+          exit 1
+
       - name: Run API tests
         env:
-          BASE_URL: ${{ env.BASE_URL }}
+          BASE_URL: http://localhost:8080
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5433/appdb
         run: npm run test:api
+
+      - name: Show Docker logs on failure
+        if: failure()
+        run: docker compose logs
+
+      - name: Stop application
+        if: always()
+        run: docker compose down -v
 
   e2e-tests:
     name: E2E Tests Playwright
@@ -78,9 +105,26 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
+      - name: Start application
+        run: docker compose up -d --build
+
+      - name: Wait for application
+        run: |
+          for i in {1..60}; do
+            if curl -fsS http://localhost:8080/schedule?semester=1 > /dev/null; then
+              echo "Application is ready"
+              exit 0
+            fi
+            echo "Waiting for application..."
+            sleep 5
+          done
+          echo "Application did not start in time"
+          docker compose logs
+          exit 1
+
       - name: Run E2E tests
         env:
-          BASE_URL: ${{ env.BASE_URL }}
+          BASE_URL: http://localhost:8080
         run: npm run test:e2e
 
       - name: Upload Playwright report
@@ -90,6 +134,14 @@ jobs:
           name: playwright-report
           path: playwright-report/
           if-no-files-found: ignore
+
+      - name: Show Docker logs on failure
+        if: failure()
+        run: docker compose logs
+
+      - name: Stop application
+        if: always()
+        run: docker compose down -v
 
   db-tests:
     name: SQL Tests
