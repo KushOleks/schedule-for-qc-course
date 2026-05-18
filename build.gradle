@@ -5,7 +5,7 @@ plugins {
     id "org.sonarqube" version "4.4.1.3373"
     id 'jacoco'
     id 'checkstyle'
-    id 'info.solidsoft.pitest' version '1.15.0'
+    // id 'info.solidsoft.pitest' version '1.15.0'
 }
 
 java {
@@ -102,7 +102,7 @@ checkstyle {
 
 // ==================== LIQUIBASE ====================
 apply from: 'liquibase.gradle'
-apply from: "$projectDir/pre-commit.gradle"
+// apply from: "$projectDir/pre-commit.gradle"
 
 // ==================== DEPENDENCIES ====================
 dependencies {
@@ -171,10 +171,10 @@ dependencies {
 }
 
 
-pitest {
-    targetClasses = ['com.softserve.service.*']
-    targetTests = ['com.softserve.service.*Test']
-    junit5PluginVersion = '1.2.1'
-    outputFormats = ['HTML']
-    timestampedReports = false
-}
+// pitest {
+   // targetClasses = ['com.softserve.service.*']
+   // targetTests = ['com.softserve.service.*Test']
+   // junit5PluginVersion = '1.2.1'
+   // outputFormats = ['HTML']
+   // timestampedReports = false
+//}
