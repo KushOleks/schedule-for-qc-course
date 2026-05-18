@@ -12,6 +12,8 @@ services:
       JWT_SECRET: dev-secret
       JWT_EXPIRED: 24h
 
+      LIQUIBASE_ENABLED: true
+
       REDIS_URL: redis://redis:6379
       BACKEND_URL: http://localhost:8080
       CORS_ORIGINS: http://localhost:3000

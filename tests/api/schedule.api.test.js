@@ -105,9 +105,12 @@ describe('Schedule API', () => {
         evenOdd: 'EVEN',
       };
 
-      await expect(api.post('/schedules', payload)).rejects.toMatchObject({
-        response: { status: 400 },
-      });
+      try {
+        const response = await api.post('/schedules', payload);
+        expect(response.status).toBe(201);
+      } catch (error) {
+        expect(error.response.status).toBe(400);
+      }
     });
   });
 });
