@@ -53,3 +53,9 @@ The main goal of the project is designing a website where the university or inst
    ```bash
    npm start
    ```
+
+
+
+# Class Schedule
+
+![Tests](https://github.com/KushOleks/schedule-for-qc-course/actions/workflows/tests.yml/badge.svg)
