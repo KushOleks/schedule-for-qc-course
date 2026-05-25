@@ -5,7 +5,7 @@
 ## General info
 
 This repository contains the source code of the Class Schedule Project.
-The main goal of the project is designing a website where the university or institute staff can create, store and display their training schedules.
+The main goal of the project is designing a website where the university or institute staff can create, store and display their training schedules..
 
 
 ## Creating a local repository
